@@ -3,9 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <limits.h>
-#include <errno.h>
-#include <ctype.h>
 
 #define NAME_LEN      50         
 #define LINE_LEN      256
