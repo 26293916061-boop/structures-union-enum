@@ -1,11 +1,4 @@
-/*
- * 4.c - Student Records and Academic Analytics System 
- *
- * Design notes
- *  Records live in a dynamically allocated array malloc that grows with realloc when full then count and capacity are tracked separately.
- *  Sorting choice: display_sorted() sorts a COPY of the arraay, so the original insertion order of the records is never changed.
- *  Sort order: GPA descending, ties broken by roll number ascending.
- */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,9 +7,9 @@
 #include <errno.h>
 #include <ctype.h>
 
-#define NAME_LEN      50          /* 49 characters + '\0' */
+#define NAME_LEN      50         
 #define LINE_LEN      256
-#define MAX_CAPACITY  1000000UL   /* sanity limit for the initial request */
+#define MAX_CAPACITY  1000000UL  
 
 typedef struct {
     int   roll;
