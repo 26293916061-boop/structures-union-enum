@@ -3,9 +3,9 @@
 #include <string.h>
 #include <stdint.h>
 
-#define NAME_LEN      50         
+#define NAME_LEN      50
 #define LINE_LEN      256
-#define MAX_CAPACITY  1000000UL  
+#define MAX_CAPACITY  1000000UL
 
 typedef struct {
     int   roll;
@@ -29,7 +29,7 @@ static int read_line(char *buf, size_t size)
         buf[len - 1] = '\0';
         return 1;
     }
-    int c;                               
+    int c;
     while ((c = getchar()) != '\n' && c != EOF)
         ;
     return 2;
@@ -43,13 +43,12 @@ static int read_int(const char *prompt, int *out)
         int r = read_line(buf, sizeof buf);
         if (r == 0) return 0;
         if (r == 2) { printf("Error: input too long.\n"); continue; }
-        errno = 0;
         long v = strtol(buf, &end, 10);
-        if (end == buf || errno == ERANGE || v > INT_MAX || v < INT_MIN) {
+        if (end == buf || (long)(int)v != v) {
             printf("Error: please enter a valid whole number.\n");
             continue;
         }
-        while (isspace((unsigned char)*end)) end++;
+        while (*end == ' ' || *end == '\t') end++;
         if (*end != '\0') {
             printf("Error: please enter a valid whole number.\n");
             continue;
@@ -67,13 +66,12 @@ static int read_float(const char *prompt, float *out)
         int r = read_line(buf, sizeof buf);
         if (r == 0) return 0;
         if (r == 2) { printf("Error: input too long.\n"); continue; }
-        errno = 0;
         double v = strtod(buf, &end);
-        if (end == buf || errno == ERANGE) {
+        if (end == buf) {
             printf("Error: please enter a valid number.\n");
             continue;
         }
-        while (isspace((unsigned char)*end)) end++;
+        while (*end == ' ' || *end == '\t') end++;
         if (*end != '\0') {
             printf("Error: please enter a valid number.\n");
             continue;
@@ -82,7 +80,6 @@ static int read_float(const char *prompt, float *out)
         return 1;
     }
 }
-
 
 static int valid_age(int age)    { return age >= 16 && age <= 100; }
 static int valid_gpa(float gpa)  { return gpa >= 0.0f && gpa <= 4.0f; }
@@ -124,7 +121,6 @@ static int read_valid_gpa(float *gpa)
         printf("Error: GPA must be between 0.00 and 4.00.\n");
     }
 }
-
 
 static int init_db(StudentDB *db, size_t cap)
 {
@@ -250,7 +246,7 @@ static void update_student(StudentDB *db)
         printf("Error: roll number %d not found.\n", roll);
         return;
     }
-    Student s = db->data[idx];             
+    Student s = db->data[idx];
     printf("Enter the new details (roll number stays %d).\n", roll);
     if (!read_name(s.name)) return;
     if (!read_valid_age(&s.age)) return;
@@ -268,6 +264,7 @@ static void delete_student(StudentDB *db)
         printf("Error: roll number %d not found.\n", roll);
         return;
     }
+
     memmove(&db->data[idx], &db->data[idx + 1],
             (db->count - (size_t)idx - 1) * sizeof(Student));
     db->count--;
@@ -339,7 +336,7 @@ int main(void)
     StudentDB db = { NULL, 0, 0 };
     int cap;
 
-    for (;;) {                                 
+    for (;;) {
         if (!read_int("Enter initial capacity: ", &cap)) return 0;
         if (cap <= 0) {
             printf("Error: capacity must be a positive number.\n");
@@ -351,7 +348,7 @@ int main(void)
     int choice;
     for (;;) {
         print_menu();
-        if (!read_int("Enter your choice: ", &choice)) break;  
+        if (!read_int("Enter your choice: ", &choice)) break;
         if (choice == 0) break;
         switch (choice) {
             case 1: add_student(&db);     break;
